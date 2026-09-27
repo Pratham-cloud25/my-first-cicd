@@ -1,0 +1,14 @@
+name: My First CI
+
+on: [push]
+
+jobs:
+  first-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Welcome
+        run: echo "My first CI pipeline is running!"
+
+      - name: Check date
+        run: date
