@@ -53,9 +53,4 @@ jobs:
           aws ssm send-command \
             --instance-ids i-0a7af95589e1a406e \
             --document-name "AWS-RunShellScript" \
-            --parameters 'commands=[
-              "docker pull pmt2525/my-first-cicd:latest",
-              "docker rm -f my-first-cicd-container 2>/dev/null || true",
-              "docker run --name my-first-cicd-container pmt2525/my-first-cicd:latest",
-              "docker logs my-first-cicd-container"
-            ]'
+            --parameters 'commands=["docker pull pmt2525/my-first-cicd:latest","docker rm -f my-first-cicd-container 2>/dev/null || true","docker run --name my-first-cicd-container pmt2525/my-first-cicd:latest","docker logs my-first-cicd-container"]'
