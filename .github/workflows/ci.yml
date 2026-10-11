@@ -41,16 +41,15 @@ jobs:
         run: |
           docker tag my-first-cicd ${{ secrets.DOCKERHUB_USERNAME }}/my-first-cicd:latest
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-first-cicd:latest
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+     
+      - name: Deploy on EC2 using SSH
+        uses: appleboy/ssh-action@v1.2.0
         with:
-          role-to-assume: arn:aws:iam::148761637471:role/GitHubActions-Deploy-Role
-          aws-region: us-east-2
-
-      - name: Deploy on EC2 using SSM
-        run: |
-          aws ssm send-command \
-            --instance-ids i-0a7af95589e1a406e \
-            --document-name "AWS-RunShellScript" \
-            --parameters 'commands=["docker pull pmt2525/my-first-cicd:latest","docker rm -f my-first-cicd-container 2>/dev/null || true","docker run --name my-first-cicd-container pmt2525/my-first-cicd:latest","docker logs my-first-cicd-container"]'
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull pmt2525/my-first-cicd:latest
+            docker rm -f my-first-cicd-container || true
+            docker run --name my-first-cicd-container pmt2525/my-first-cicd:latest
+            docker logs my-first-cicd-container
